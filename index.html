@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+     <body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+        <h1>My App</h1>
+
+        <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+          
+            // Your web app's Firebase configuration
+            const firebaseConfig = {
+              apiKey: "AIzaSyCUO_B6k_YcgXRRbemTP9J0i-7xOemvleY",
+              authDomain: "katdata-db.firebaseapp.com",
+              projectId: "katdata-db",
+              storageBucket: "katdata-db.appspot.com",
+              messagingSenderId: "442102646303",
+              appId: "1:442102646303:web:d21fab587e073a0acb372a"
+            };
+          
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+        </script>
+
+
+
+
+        <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+
+        <script>
+            const xValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+            const yValues = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
+
+            new Chart("myChart", {
+                type: "bar",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        fill: false,
+                        lineTension: 0,
+                        backgroundColor: "rgba(0,0,255,1.0)",
+                        borderColor: "rgba(0,0,255,0.1)",
+                        data: yValues
+                    }]
+                },
+                options: {
+                    legend: { display: false },
+                    scales: {
+                        yAxes: [{ ticks: { min: 6, max: 16 } }],
+                    }
+                }
+            });
+        </script>
+
+    </body>
+</html>
