@@ -1,36 +1,22 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>Firestore Data with Chart.js</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" ></script>
+        <!-- <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js" ></script>
+        <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js" ></script>
+        <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js" ></script> -->
+    </head>
      <body>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-
-        <h1>My App</h1>
-
-        <script type="module">
-            // Import the functions you need from the SDKs you need
-            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-            // TODO: Add SDKs for Firebase products that you want to use
-            // https://firebase.google.com/docs/web/setup#available-libraries
-          
-            // Your web app's Firebase configuration
-            const firebaseConfig = {
-              apiKey: "AIzaSyCUO_B6k_YcgXRRbemTP9J0i-7xOemvleY",
-              authDomain: "katdata-db.firebaseapp.com",
-              projectId: "katdata-db",
-              storageBucket: "katdata-db.appspot.com",
-              messagingSenderId: "442102646303",
-              appId: "1:442102646303:web:d21fab587e073a0acb372a"
-            };
-          
-            // Initialize Firebase
-            const app = initializeApp(firebaseConfig);
-        </script>
+        <h1>Firestore Data with Chart.js</h1>
+        <canvas id="chartTimeline" width="400" height="200"></canvas>
+        <canvas id="chartWeekday" width="400" height="200"></canvas>
+        <canvas id="chartHourly" width="400" height="200"></canvas>
 
 
 
 
-        <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
-
-        <script>
+        <!-- <script>
             const xValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
             const yValues = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
 
@@ -53,6 +39,190 @@
                     }
                 }
             });
+        </script> -->
+
+        <script type="module">
+            import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'
+            import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'
+            import { getFirestore, collection, getDocs  } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'
+
+            // Your web app's Firebase configuration
+            const firebaseConfig = {
+              apiKey: "AIzaSyCdsLdaLzaSDZnyR-evvlbfYmGt0mHpgmA",
+              authDomain: "k-thoughts-db.firebaseapp.com",
+              projectId: "k-thoughts-db",
+              storageBucket: "k-thoughts-db.appspot.com",
+              messagingSenderId: "753934912285",
+              appId: "1:753934912285:web:63e6e3ded1ad23f92baff4"
+            };
+          
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const thoughtList = await getThoughts(db);
+
+            async function getThoughts(db) {
+                const thoughtsCol = collection(db, 'thoughts');
+                const thoughtSnapshot = await getDocs(thoughtsCol);
+                const thoughtList = thoughtSnapshot.docs.map(doc => doc.data());
+                return thoughtList;
+            }
+
+            async function prepareDataForTimelineChart(db) {
+                try {
+                    // Summarize data by day
+                    const summary = thoughtList.reduce((acc, event) => {
+                    const date = new Date(event.thoughtOn.seconds * 1000).toISOString().split('T')[0];
+                    acc[date] = (acc[date] || 0) + 1;
+                    return acc;
+                    }, {});
+
+                    return summary;
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                }
+            }
+
+            function prepareTimelineChart(summary) {
+                return {
+                    labels: Object.keys(summary),
+                    datasets: [{
+                    label: 'Events per Day',
+                    data: Object.values(summary),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                    }]
+                };
+            }
+
+            async function createTimelineChart() {
+                const summary = await prepareDataForTimelineChart(db);
+                const chartData = prepareTimelineChart(summary);
+
+                const ctx = document.getElementById('chartTimeline').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: chartData,
+                    options: {
+                    scales: {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true }
+                    }
+                    }
+                });
+            }
+
+            
+
+
+
+            async function prepareDataForWeekdayChart(db) {
+                try {
+                    // Summarize data by day of the week (Monday start)
+                    const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                    const summary = thoughtList.reduce((acc, event) => {
+                    const date = new Date(event.thoughtOn.seconds * 1000);
+                    const day = (date.getDay() + 6) % 7;  // Convert Sunday start to Monday start
+                    const dayName = daysOfWeek[day];
+                    acc[dayName] = (acc[dayName] || 0) + 1;
+                    return acc;
+                    }, {});
+
+                    return summary;
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                }
+            }
+
+            function prepareWeekdayChart(summary) {
+                const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                const data = daysOfWeek.map(day => summary[day] || 0);
+                return {
+                    labels: daysOfWeek,
+                    datasets: [{
+                    label: 'Events per Day of the Week',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                    }]
+                };
+            }
+
+            async function createWeekdayChart() {
+                const summary = await prepareDataForWeekdayChart(db);
+                const chartData = prepareWeekdayChart(summary);
+
+                const ctx = document.getElementById('chartWeekday').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                    scales: {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true }
+                    }
+                    }
+                });
+            }
+
+
+
+
+            async function prepareDataForHourlyChart(db) {
+                try {
+                     // Summarize data by hour
+                    const summary = thoughtList.reduce((acc, event) => {
+                    const hour = new Date(event.thoughtOn.seconds * 1000).getHours();
+                    acc[hour] = (acc[hour] || 0) + 1;
+                    return acc;
+                    }, {});
+
+                    return summary;
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                }
+            }
+
+            function prepareHourlyChart(summary) {
+                const hours = Array.from({length: 24}, (_, i) => i);
+                const data = hours.map(hour => summary[hour] || 0);
+                return {
+                    labels: hours,
+                    datasets: [{
+                    label: 'Events per Hour',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                    }]
+                };
+            }
+
+            async function createHourlyChart() {
+                const summary = await prepareDataForHourlyChart();
+                const chartData = prepareHourlyChart(summary);
+
+                const ctx = document.getElementById('chartHourly').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                    scales: {
+                        x: { beginAtZero: true, title: { display: true, text: 'Hour of Day' } },
+                        y: { beginAtZero: true, title: { display: true, text: 'Number of Events' } }
+                    }
+                    }
+                });
+            }
+
+
+
+            createTimelineChart();
+            createWeekdayChart();
+            createHourlyChart();
+ 
         </script>
 
     </body>
