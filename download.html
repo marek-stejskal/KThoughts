@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Download data from Firestore</title>
+        <script src="scripts/helpers.js"></script>
+    </head>
+     <body>
+        <h1>Download data</h1>
+        <button id="exportMessages">Export Messages</button>
+        <button id="exportThoughts">Export Thoughts</button>
+ 
+        <script type="module">
+            import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'
+            import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'
+            import { getFirestore, collection, getDocs  } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'
+
+            // Your web app's Firebase configuration
+            const firebaseConfig = {
+              apiKey: "AIzaSyCdsLdaLzaSDZnyR-evvlbfYmGt0mHpgmA",
+              authDomain: "k-thoughts-db.firebaseapp.com",
+              projectId: "k-thoughts-db",
+              storageBucket: "k-thoughts-db.appspot.com",
+              messagingSenderId: "753934912285",
+              appId: "1:753934912285:web:63e6e3ded1ad23f92baff4"
+            };
+          
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const thoughts = await getThoughts(db);
+            const thoughtsDailySummary = await getThoughtsDailySummary(db);
+            const thoughtsHourlySummary = await getThoughtsHourlySummary(db);
+            const messagesDailySummary = await getMessagesDailySummary(db);
+
+            async function getThoughts(db) {
+                const thoughtsCol = collection(db, 'thoughts');
+                const thoughtSnapshot = await getDocs(thoughtsCol);
+                const thoughtList = thoughtSnapshot.docs.map(doc => doc.data());
+                return thoughtList;
+            }
+            async function getThoughtsDailySummary(db) {
+                const thoughtsCol = collection(db, 'thoughtsDailySummary');
+                const thoughtSnapshot = await getDocs(thoughtsCol);
+                const thoughtList = thoughtSnapshot.docs.map(doc => doc.data());
+                return thoughtList;
+            }
+            async function getThoughtsHourlySummary(db) {
+                const thoughtsCol = collection(db, 'thoughtsHourlySummary');
+                const thoughtSnapshot = await getDocs(thoughtsCol);
+                const thoughtList = thoughtSnapshot.docs.map(doc => doc.data());
+                return thoughtList;
+            }
+            async function getMessagesDailySummary(db) {
+                const messagesCol = collection(db, 'messagesDailySummary');
+                const messageSnapshot = await getDocs(messagesCol);
+                const messageList = messageSnapshot.docs.map(doc => doc.data());
+                return messageList;
+            }
+
+            document.getElementById("exportMessages").addEventListener("click", () => {
+                 exportToJsonFile(messagesDailySummary);
+            });
+
+            document.getElementById("exportThoughts").addEventListener("click", () => {
+                 exportToJsonFile(thoughts);
+            });
+        </script>
+
+    </body>
+</html>
