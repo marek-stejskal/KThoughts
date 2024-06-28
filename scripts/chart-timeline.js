@@ -43,11 +43,18 @@ function createChart_Timeline(canvasId, chartData){
         .x(d => x(d.date))
         .y(d => y(d.count));
 
-    var svg = d3.select("#" + canvasId).append("svg")
+    // The chart canvas
+    const svg = d3.create("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("viewBox", [0, 0, width, height])
+        .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif;");
+
+    // var svg = d3.select("#" + canvasId).append("svg")
+    //     .attr("width", width + margin.left + margin.right)
+    //     .attr("height", height + margin.top + margin.bottom)
+    //     .append("g")
+    //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Add horizontal grid lines
     svg.append("g")
@@ -81,4 +88,6 @@ function createChart_Timeline(canvasId, chartData){
         .datum(counts)
         .attr("class", "line")
         .attr("d", line);
+
+    document.getElementById(canvasId).append(svg.node());
 }

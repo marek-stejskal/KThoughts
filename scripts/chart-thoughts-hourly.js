@@ -36,11 +36,19 @@ function createChart_ThoughtsHourly(canvasId, chartData){
     var xAxis = d3.axisBottom(x).tickFormat(d3.format("02d"));
     var yAxis = d3.axisLeft(y);
 
-    var svg = d3.select("#" + canvasId).append("svg")
+    // var svg = d3.select("#" + canvasId).append("svg")
+    //     .attr("width", width + margin.left + margin.right)
+    //     .attr("height", height + margin.top + margin.bottom)
+    //     .append("g")
+    //     .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif;")
+    //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // The chart canvas
+    const svg = d3.create("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("viewBox", [0, 0, width, height])
+        .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif;");
 
     svg.append("g")
         .attr("class", "x-axis")
@@ -72,4 +80,6 @@ function createChart_ThoughtsHourly(canvasId, chartData){
         .attr("y", d => y(d.value))
         .attr("width", x.bandwidth())
         .attr("height", d => y(0) - y(d.value));
+    
+    document.getElementById(canvasId).append(svg.node());
 }

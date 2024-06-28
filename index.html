@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar Chart with D3.js</title>
+    <title>Thinking of you</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="scripts/helpers.js"></script>
     <script src="scripts/chart-messages-overview.js"></script>
@@ -15,6 +15,11 @@
     <style>
         body {
             font-family: Consolas;
+        }
+
+        .content {
+            max-width: 1000px;
+            margin: auto;
         }
 
         .day {
@@ -57,44 +62,46 @@
     </style>
 </head>
 <body>
-    <div class="article">
-        <h2>I was thinking about you just <span id="timeAgo"></span> ago
-            <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-                <image href="resources/heart.svg" height="20" width="20" />
-            </svg>
-        </h2>
-        <p>Whenever I was thinking of you, wondering how was your day, what you were doing, what animals are you saving ... but did not want to spam you even more than I already do, I send a "thought" to the database. For this I wrote a small application for my watch, to make it very convenient.</p>
-        <p>The approach is based on me manually triggering the "thought" upload, which has the following issues:</p>
-        <ul>
-            <li>it doesn't distinguish the "thought" quality or length</li>
-            <li>when I am with you, you are the only thing I think about, I don't have time to upload "thought"</li>
-            <li>while building this project, I am obviously thinking of you, yet too consumed by getting it done</li>
-        </ul>
-    </div>
+    <div class="content">
+        <div class="article">
+            <h2>I was thinking about you just <span id="timeAgo"></span> ago
+                <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                    <image href="resources/heart.svg" height="20" width="20" />
+                </svg>
+            </h2>
+            <p>Whenever I was thinking of you, wondering how was your day, what you were doing, what animals are you saving ... but did not want to spam you even more than I already do, I send a "thought" to the database. For this I wrote a small application for my watch, to make it very convenient.</p>
+            <p>The approach is based on me manually triggering the "thought" upload, which has the following issues:</p>
+            <ul>
+                <li>it doesn't distinguish the "thought" quality or length</li>
+                <li>when I am with you, you are the only thing I think about, I don't have time to upload "thought"</li>
+                <li>while building this project, I am obviously thinking of you, yet too consumed by getting it done</li>
+            </ul>
+        </div>
 
-    <div class="article">
-        <h2>Recent thought timeline</h2>
-        <p>The following display "thought" counts over time</p>
-        <p>On 31.5 the idea popped in my head. On 3.6 I had a functional prototype ready and started gathering data. </p>
-    </div>
-    <div id="recent-timeline-chart"></div>
+        <div class="article">
+            <h2>Recent thought timeline</h2>
+            <p>The following display "thought" counts over time</p>
+            <p>On 31.5 the idea popped in my head. On 3.6 I had a functional prototype ready and started gathering data. </p>
+        </div>
+        <div id="recent-timeline-chart"></div>
 
-    <div class="article">
-        <h2>Thoughts during the day</h2>
-        <p>Shows when am I usually thinking about you.</p>
-        <p>The data suggests it's most often when I wake up and when I go to sleep.</p>
-    </div>
-    <div id="thoughts-hourly"></div>
+        <div class="article">
+            <h2>Thoughts during the day</h2>
+            <p>Shows when am I usually thinking about you.</p>
+            <p>The data suggests it's most often when I wake up and when I go to sleep.</p>
+        </div>
+        <div id="thoughts-hourly"></div>
 
-    <div class="article">
-        <h2>Message history</h2>
-        <p>The following charts display combined word counts we have shared over SMS, Facebook and WhatsApp. It means to illustrate how our contact evolved over the years.</p>
-        <p>The approach focusing on text messages has the following issues:</p>
-        <ul>
-            <li>it doesn't take into account calls or in-person conversations</li>
-        </ul>
+        <div class="article">
+            <h2>Message history</h2>
+            <p>The following charts display combined word counts we have shared over SMS, Facebook and WhatsApp. It means to illustrate how our contact evolved over the years.</p>
+            <p>The approach focusing on text messages has the following issues:</p>
+            <ul>
+                <li>it doesn't take into account calls or in-person conversations</li>
+            </ul>
+        </div>
+        <div id="messages-overview"></div>
     </div>
-    <div id="messages-overview"></div>
     
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'
