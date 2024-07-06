@@ -147,6 +147,8 @@
 
 
         var thoughts = await fetchThoughts();
+        var messages = await fetchMessages();
+
         // const summaryThoughtsHourly = await getSummaryThoughtsHourly();
         // const summaryThoughtsDaily = await getSummaryThoughtsDaily();
         // const summaryThoughtsToday = await getSummaryThoughtsToday();
@@ -163,7 +165,16 @@
             console.log("Thoughts populated");
         }
 
-
+        async function fetchMessages() {
+            const docRef = doc(db, "raw", "messages")
+            const snapshot = await getDoc(docRef);
+            const data = snapshot.data().summary;
+            return data;
+        }
+        async function populateMessagess(){
+            thoughts = await fetchMessages();
+            console.log("Messages populated");
+        }
 
         // async function getSummaryThoughtsHourly() {
         //     const colRef = collection(db, 'summaryThoughtsHourly');
@@ -171,15 +182,15 @@
         //     const data = snapshot.docs.map(doc => doc.data());
         //     return data;
         // }
-        async function getSummaryThoughtsDaily() {
-            const colRef = collection(db, 'summaryThoughtsDaily');
-            const snapshot = await getDocs(colRef);
-            const data = snapshot.docs.map(doc => ({
-                thoughtOn: new Date(doc.id),
-                thoughtCount: doc.data().thoughtCount
-            }));
-            return data;
-        }
+        // async function getSummaryThoughtsDaily() {
+        //     const colRef = collection(db, 'summaryThoughtsDaily');
+        //     const snapshot = await getDocs(colRef);
+        //     const data = snapshot.docs.map(doc => ({
+        //         thoughtOn: new Date(doc.id),
+        //         thoughtCount: doc.data().thoughtCount
+        //     }));
+        //     return data;
+        // }
         // async function getSummaryThoughtsToday() {
         //     const colRef = collection(db, 'groupThoughtsDaily');
         //     const snapshot = await getDocs(colRef);
@@ -199,7 +210,7 @@
         createChart_ThoughtsToday("thoughts-today", thoughts); // (summaryThoughtsToday[summaryThoughtsToday.length-1]).thoughtOnDateTime);
         createChart_ThoughtsTimeline("thoughts-timeline", thoughts); // summaryThoughtsDaily //getThoughtsDataNew //getThoughtsData() //thoughts
         createChart_ThoughtsHourly("thoughts-hourly", thoughts); // summaryThoughtsHourly // getThoughtsDataNew() //getThoughtsData() //thoughts
-        // createChart_MessagesOverview("messages-overview", wordCountsPerDay); //getMessagesDailyData2() //messagesDailySummary
+        createChart_MessagesOverview("messages-overview", messages); //getMessagesDailyData2() //messagesDailySummary
         
         async function updateTimeSince() {
             const latestThoughtOn = new Date(d3.max(thoughts));
