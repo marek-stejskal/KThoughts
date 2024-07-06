@@ -1238,7 +1238,6 @@ function getThoughtsData(){
   return [
     {
       "thoughtOn": "2024-06-26T09:19:22",
-      "origin": "46.13.117.52"
     },
     {
       "thoughtOn": "2024-06-17T16:21:28"
@@ -2655,5 +2654,17 @@ function getThoughtsData(){
       "thoughtOn": "2024-06-16T09:04:01"
     }
   ]
+}
+function getThoughtsDataNew(){
+  return {
+    "hours": [5, 3, 8, 2, 6, 4, 5, 7, 9, 6, 8, 5, 6, 7, 9, 4, 5, 7, 6, 8, 4, 3, 2, 3],
+    "dates": [
+      { "thoughtOn": "2024-06-01", "thoughtCount": 4 },
+      { "thoughtOn": "2024-06-02", "thoughtCount": 5 },
+      { "thoughtOn": "2024-06-03", "thoughtCount": 6 },
+      { "thoughtOn": "2024-06-04", "thoughtCount": 7 },
+      { "thoughtOn": "2024-06-05", "thoughtCount": 5 }
+    ]
+  }  
 }
 

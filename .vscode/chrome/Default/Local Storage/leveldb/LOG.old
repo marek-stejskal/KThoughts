@@ -1,0 +1,6 @@
+2024/07/02-13:38:47.040 548c Reusing MANIFEST C:\Users\stejs\source\repos\KThoughts\.vscode\chrome\Default\Local Storage\leveldb/MANIFEST-000001
+2024/07/02-13:38:47.178 548c Recovering log #3
+2024/07/02-13:38:47.192 548c Reusing old log C:\Users\stejs\source\repos\KThoughts\.vscode\chrome\Default\Local Storage\leveldb/000003.log 
+2024/07/02-13:40:57.561 548c Level-0 table #5: started
+2024/07/02-13:40:57.575 548c Level-0 table #5: 75595 bytes OK
+2024/07/02-13:40:57.579 548c Delete type=0 #3

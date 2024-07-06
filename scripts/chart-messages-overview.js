@@ -14,10 +14,12 @@ function createChart_MessagesOverview(canvasId, chartData){
     const countDay = i => (i + 6) % 7;
 
     const data = chartData.map(item => ({
-        date: new Date(item.messageOn),
-        value: item.wordCount,
-        sender: item.sender
+        date: new Date(item.Date),
+        value: item.WordCount,
+        sender: item.Sender
     })).sort((a,b) => a.date - b.date);
+
+    // const data = chartData;
 
     // Compute the extent of the value, ignore the outliers
     // and define a diverging and symmetric color scale.

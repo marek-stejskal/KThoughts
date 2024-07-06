@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thinking of you</title>
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="libraries/d3.v6.min.js"></script>
+    <script src="libraries/darkmode-js.min.js"></script>
     <script src="scripts/helpers.js"></script>
     <script src="scripts/chart-messages-overview.js"></script>
     <script src="scripts/chart-thoughts-hourly.js"></script>
-    <script src="scripts/chart-timeline.js"></script>
+    <script src="scripts/chart-thoughts-timeline.js"></script>
+    <script src="scripts/chart-thoughts-today.js"></script>
     <script src="scripts/data-messages.js"></script>
     <script src="scripts/data-thoughts.js"></script>
     <script src="scripts/data-visits.js"></script>
@@ -47,7 +49,7 @@
 
         .line {
             fill: none;
-            stroke: steelblue;
+            stroke: steelblue !important;
             stroke-width: 2px;
         }
         .grid line {
@@ -58,32 +60,32 @@
 
         .article {
             max-width: 1000px;
+            /* display: none; */
         }
     </style>
 </head>
 <body>
+    <div id="chart"></div>
+
     <div class="content">
         <div class="article">
-            <h2>I was thinking about you just <span id="timeAgo"></span> ago
+            <h2>I was thinking about you just <span id="timeAgo">(wait for it)</span> ago
                 <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
                     <image href="resources/heart.svg" height="20" width="20" />
                 </svg>
             </h2>
-            <p>Whenever I was thinking of you, wondering how was your day, what you were doing, what animals are you saving ... but did not want to spam you even more than I already do, I send a "thought" to the database. For this I wrote a small application for my watch, to make it very convenient.</p>
-            <p>The approach is based on me manually triggering the "thought" upload, which has the following issues:</p>
-            <ul>
-                <li>it doesn't distinguish the "thought" quality or length</li>
-                <li>when I am with you, you are the only thing I think about, I don't have time to upload "thought"</li>
-                <li>while building this project, I am obviously thinking of you, yet too consumed by getting it done</li>
-            </ul>
         </div>
+
+        <div class="article">
+            <h2>Thoughts today</h2>
+        </div>
+        <div id="thoughts-today"></div>
 
         <div class="article">
             <h2>Recent thought timeline</h2>
             <p>The following display "thought" counts over time</p>
-            <p>On 31.5 the idea popped in my head. On 3.6 I had a functional prototype ready and started gathering data. </p>
         </div>
-        <div id="recent-timeline-chart"></div>
+        <div id="thoughts-timeline"></div>
 
         <div class="article">
             <h2>Thoughts during the day</h2>
@@ -95,18 +97,36 @@
         <div class="article">
             <h2>Message history</h2>
             <p>The following charts display combined word counts we have shared over SMS, Facebook and WhatsApp. It means to illustrate how our contact evolved over the years.</p>
-            <p>The approach focusing on text messages has the following issues:</p>
-            <ul>
-                <li>it doesn't take into account calls or in-person conversations</li>
-            </ul>
         </div>
         <div id="messages-overview"></div>
     </div>
     
+    <script>
+        const options = {
+            bottom: '32px', // default: '32px'
+            right: '32px', // default: '32px'
+            left: 'unset', // default: 'unset'
+            time: '0.5s', // default: '0.3s'
+            mixColor: '#fff', // default: '#fff'
+            backgroundColor: '#fff',  // default: '#fff'
+            buttonColorDark: '#100f2c',  // default: '#100f2c'
+            buttonColorLight: '#fff', // default: '#fff'
+            saveInCookies: false, // default: true,
+            label: '🌓', // default: ''
+            autoMatchOsTheme: true // default: true
+        }
+
+        // const darkmode = new Darkmode(options);
+
+        // darkmode.showWidget();    
+    </script>
+
+
+
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'
         import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'
-        import { getFirestore, collection, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'
+        import { getFirestore, connectFirestoreEmulator, collection, doc, getDoc, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'
  
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -122,45 +142,73 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let latestThought = await getLatestThought();
+        // const db = getFirestore();
+        connectFirestoreEmulator(db, '127.0.0.1', 8080);
 
-        const thoughts = await getThoughts(db);
-        const thoughtsDailySummary = await getThoughtsDailySummary(db);
-        const messagesDailySummary = await getMessagesDailySummary(db);
 
-        async function getThoughts(db) {
-            const thoughtsCol = collection(db, 'thoughts');
-            const thoughtSnapshot = await getDocs(thoughtsCol);
-            const thoughtList = thoughtSnapshot.docs.map(doc => doc.data());
-            return thoughtList;
+        var thoughts = await fetchThoughts();
+        // const summaryThoughtsHourly = await getSummaryThoughtsHourly();
+        // const summaryThoughtsDaily = await getSummaryThoughtsDaily();
+        // const summaryThoughtsToday = await getSummaryThoughtsToday();
+        // const wordCountsPerDay = await getWordCountsPerDay();
+
+        async function fetchThoughts() {
+            const docRef = doc(db, "raw", "thoughts")
+            const snapshot = await getDoc(docRef);
+            const data = snapshot.data().thoughtOn;
+            return data;
+        }
+        async function populateThoughts(){
+            thoughts = await fetchThoughts();
+            console.log("Thoughts populated");
         }
 
-        async function getThoughtsDailySummary(db) {
-            const thoughtsCol = collection(db, 'thoughtsDailySummary');
-            const thoughtSnapshot = await getDocs(thoughtsCol);
-            const thoughtList = thoughtSnapshot.docs.map(doc => doc.data());
-            return thoughtList;
+
+
+        // async function getSummaryThoughtsHourly() {
+        //     const colRef = collection(db, 'summaryThoughtsHourly');
+        //     const snapshot = await getDocs(colRef);
+        //     const data = snapshot.docs.map(doc => doc.data());
+        //     return data;
+        // }
+        async function getSummaryThoughtsDaily() {
+            const colRef = collection(db, 'summaryThoughtsDaily');
+            const snapshot = await getDocs(colRef);
+            const data = snapshot.docs.map(doc => ({
+                thoughtOn: new Date(doc.id),
+                thoughtCount: doc.data().thoughtCount
+            }));
+            return data;
         }
+        // async function getSummaryThoughtsToday() {
+        //     const colRef = collection(db, 'groupThoughtsDaily');
+        //     const snapshot = await getDocs(colRef);
+        //     const data = snapshot.docs.map(doc => ({
+        //         thoughtOnDate: new Date(doc.id),
+        //         thoughtOnDateTime: doc.data().thoughtOn
+        //     }));
+        //     return data;
+        // }
+        // async function getWordCountsPerDay() {
+        //     const docRef = doc(db, "summaryMessages", "wordCountsPerDay")
+        //     const snapshot = await getDoc(docRef);
+        //     const data = snapshot.data().summary;
+        //     return data;
+        // }
 
-        async function getMessagesDailySummary(db) {
-            const messagesCol = collection(db, 'messagesDailySummary');
-            const messageSnapshot = await getDocs(messagesCol);
-            const messageList = messageSnapshot.docs.map(doc => doc.data());
-            return messageList;
-        }
-
-        createChart_MessagesOverview("messages-overview", messagesDailySummary); //getMessagesDailyData2()
-        createChart_ThoughtsHourly("thoughts-hourly", thoughts); //getThoughtsData()
-        createChart_Timeline("recent-timeline-chart", thoughts); //getThoughtsData()
-
+        createChart_ThoughtsToday("thoughts-today", thoughts); // (summaryThoughtsToday[summaryThoughtsToday.length-1]).thoughtOnDateTime);
+        createChart_ThoughtsTimeline("thoughts-timeline", thoughts); // summaryThoughtsDaily //getThoughtsDataNew //getThoughtsData() //thoughts
+        createChart_ThoughtsHourly("thoughts-hourly", thoughts); // summaryThoughtsHourly // getThoughtsDataNew() //getThoughtsData() //thoughts
+        // createChart_MessagesOverview("messages-overview", wordCountsPerDay); //getMessagesDailyData2() //messagesDailySummary
+        
         async function updateTimeSince() {
-            const latestThoughtOn = new Date(latestThought.thoughtOn);
+            const latestThoughtOn = new Date(d3.max(thoughts));
             const timeAgoText = timeAgo(latestThoughtOn);
             document.getElementById("timeAgo").innerText = timeAgoText;
         }
 
-        // Update stored latest thought every 30 seconds
-        setInterval(updateLatestThought, 30000);
+        // Update stored latest thought every 15 seconds
+        setInterval(populateThoughts, 15000);
         // Update the span every second
         setInterval(updateTimeSince, 1000);
 
@@ -170,22 +218,22 @@
         // Add visit record
         addVisit();
  
-        async function updateLatestThought(){
-            latestThought = await getLatestThought();
-        }
-        async function getLatestThought(){
-            const collectionRef = collection(db, "thoughts");
-            const q = query(collectionRef, orderBy("thoughtOn", "desc"), limit(1));
+        // async function updateLatestThought(){
+        //     latestThought = await getLatestThought();
+        // }
+        // async function getLatestThought(){
+        //     const collectionRef = collection(db, "thoughts");
+        //     const q = query(collectionRef, orderBy("thoughtOn", "desc"), limit(1));
 
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-                console.log(doc.data());
-            });
+        //     const querySnapshot = await getDocs(q);
+        //     querySnapshot.forEach((doc) => {
+        //         console.log(doc.data());
+        //     });
 
-            const thoughtData = querySnapshot.docs[0].data();
+        //     const thoughtData = querySnapshot.docs[0].data();
 
-            return thoughtData;
-        }
+        //     return thoughtData;
+        // }
     </script>
 
 </body>
