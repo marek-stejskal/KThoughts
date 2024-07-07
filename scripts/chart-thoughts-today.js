@@ -25,25 +25,25 @@ function createChart_ThoughtsToday(canvasId, chartData){
         count: i + 1
     }));
 
-    // Generate hourly points between the minimum and maximum times
-    const startTime = parseTime("00:00:00");
-    const endTime = parseTime("23:59:59"); //parseTime(new Date().toTimeString().split(" ")[0]); //d3.max(parsedData) //parseTime("23:59:59");
-    const hourlyPoints = [];
-    for (let t = startTime; t <= endTime; t.setHours(t.getHours() + 1)) {
-        hourlyPoints.push(new Date(t));
-    }
+    // // Generate hourly points between the minimum and maximum times
+    // const startTime = parseTime("00:00:00");
+    // const endTime = parseTime(new Date().toTimeString().split(" ")[0]); //d3.max(parsedData) //parseTime("23:59:59");
+    // const hourlyPoints = [];
+    // for (let t = startTime; t <= endTime; t.setHours(t.getHours() + 1)) {
+    //     hourlyPoints.push(new Date(t));
+    // }
 
-    // Merge hourly points with cumulative data
-    let currentIndex = 0;
-    const mergedData = hourlyPoints.map(hour => {
-        while (currentIndex < cumulativeData.length && cumulativeData[currentIndex].time <= hour) {
-            currentIndex++;
-        }
-        return {
-            time: new Date(hour),
-            count: currentIndex
-        };
-    });
+    // // Merge hourly points with cumulative data
+    // let currentIndex = 0;
+    // const mergedData = hourlyPoints.map(hour => {
+    //     while (currentIndex < cumulativeData.length && cumulativeData[currentIndex].time <= hour) {
+    //         currentIndex++;
+    //     }
+    //     return {
+    //         time: new Date(hour),
+    //         count: currentIndex
+    //     };
+    // });
 
     // Set up dimensions and margins
     const margin = { top: 20, right: 60, bottom: 0, left: 40 },
@@ -102,7 +102,7 @@ function createChart_ThoughtsToday(canvasId, chartData){
 
     // Append the path (line)
     svg.append("path")
-        .datum(mergedData)
+        .datum(cumulativeData)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
