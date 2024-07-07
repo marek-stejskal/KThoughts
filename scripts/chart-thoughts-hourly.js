@@ -29,9 +29,9 @@ function createChart_ThoughtsHourly(canvasId, chartData){
 
     // The chart canvas
     const svg = d3.create("svg")
-        .attr("width", width + margin.left + margin.right)
+        .attr("width", width)
         .attr("height", height + margin.top + margin.bottom)
-        .attr("viewBox", [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom])
+        .attr("viewBox", [0, 0, width, height + margin.top + margin.bottom])
         .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif;");
 
     svg.append("g")

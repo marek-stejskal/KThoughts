@@ -1,7 +1,7 @@
 function createChart_MessagesOverview(canvasId, chartData){
     const width = 1000; // width of the chart
     const cellSize = 17; // height of a day
-    const height = cellSize * 9; // height of a week (5 days + padding)
+    const height = cellSize * 9; // height of a week (7 days + padding)
 
     // Define formatting functions for the axes and tooltips.
     const formatValue = d3.format("+.2%");

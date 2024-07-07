@@ -52,9 +52,9 @@ function createChart_ThoughtsToday(canvasId, chartData){
 
     // The chart canvas
     const svg = d3.create("svg")
-        .attr("width", width + margin.left + margin.right)
+        .attr("width", width)
         .attr("height", height + margin.top + margin.bottom)
-        .attr("viewBox", [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom])
+        .attr("viewBox", [0, 0, width, height + margin.top + margin.bottom])
         .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif;");
 
     // Define scales
@@ -107,6 +107,16 @@ function createChart_ThoughtsToday(canvasId, chartData){
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
         .attr("d", line);
+    
+        // Get the last data point
+        const lastPoint = cumulativeData[cumulativeData.length - 1];
+        // Get scale modifier
+        const scaleModifier = 0.2;
+
+        svg.append("path")
+            .attr("d", "M 65,29 C 59,19 49,12 37,12 20,12 7,25 7,42 7,75 25,80 65,118 105,80 123,75 123,42 123,25 110,12 93,12 81,12 71,19 65,29 z")
+            .attr("transform", `translate(${x(lastPoint.time) - 65 * scaleModifier}, ${y(lastPoint.count) - 59 * scaleModifier}) scale(${scaleModifier})`)
+            .attr("fill", "#ff0707");
 
     document.getElementById(canvasId).append(svg.node());
 }

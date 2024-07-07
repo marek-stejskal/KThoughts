@@ -74,5 +74,15 @@ function createChart_ThoughtsTimeline(canvasId, chartData){
         .attr("class", "line")
         .attr("d", line);
 
+    // Get the last data point
+    const lastPoint = finalData[finalData.length - 1];
+    // Get scale modifier
+    const scaleModifier = 0.2;
+
+    svg.append("path")
+        .attr("d", "M 65,29 C 59,19 49,12 37,12 20,12 7,25 7,42 7,75 25,80 65,118 105,80 123,75 123,42 123,25 110,12 93,12 81,12 71,19 65,29 z")
+        .attr("transform", `translate(${x(lastPoint.thoughtOn) - 65 * scaleModifier}, ${y(lastPoint.thoughtCount) - 59 * scaleModifier}) scale(${scaleModifier})`)
+        .attr("fill", "#ff0707");
+    
     document.getElementById(canvasId).append(svg.node());
 }
