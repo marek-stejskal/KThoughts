@@ -37,13 +37,17 @@ function createChart_ThoughtsToday(canvasId, chartData){
         .attr("viewBox", [0, 0, width, height + margin.top + margin.bottom])
         .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif;");
 
+    // Calculate the maximum value for the y-axis
+    var maxDatasetValue = d3.max(cumulativeData, d => d.count)
+    var yMax = maxDatasetValue < 20 ? 20 : maxDatasetValue;
+
     // Define scales
     const x = d3.scaleTime()
         .domain([parseTime("00:00:00"), parseTime("23:59:59")])
         .range([margin.left, width - margin.right]);
 
     const y = d3.scaleLinear()
-        .domain([0, d3.max(cumulativeData, d => d.count)])
+        .domain([0, yMax])
         .nice()
         .range([height - margin.bottom, margin.top]);
         
