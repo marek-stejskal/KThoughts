@@ -98,6 +98,11 @@
             <h2>Message history</h2>
             <p>The following charts display combined word counts we have shared over SMS, Facebook and WhatsApp. It means to illustrate how our contact evolved over the years.</p>
         </div>
+        <div id="buttons">
+            <button id="msgDataBoth">Both</button>
+            <button id="msgDataMarek">Marek</button>
+            <button id="msgDataKatka">Katka</button>
+        </div>
         <div id="messages-overview"></div>
     </div>
     
@@ -126,7 +131,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'
         import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'
-        import { getFirestore, connectFirestoreEmulator, collection, doc, getDoc, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'
+        import { getFirestore, connectFirestoreEmulator, collection, doc, getDoc, getDocs, query, orderBy, limit, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'
  
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -141,6 +146,13 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        const thoughtsDoc = doc(db, "raw", "thoughts");
+        onSnapshot(thoughtsDoc, (doc) => {
+            const data = doc.data();
+            console.log('Document data:', data);
+            // Update your UI or perform actions based on the new data
+        });
 
         // const db = getFirestore();
         // connectFirestoreEmulator(db, '127.0.0.1', 8080);

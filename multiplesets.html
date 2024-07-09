@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D3 Chart with Buttons</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div id="buttons">
+        <button id="dataset1">Dataset 1</button>
+        <button id="dataset2">Dataset 2</button>
+        <button id="dataset3">Dataset 3</button>
+    </div>
+    <svg width="600" height="400"></svg>
+    <script>
+
+// Define your datasets
+const dataset1 = [
+    { sender: 'Alice', wordCount: 120, date: '2023-07-01' },
+    { sender: 'Bob', wordCount: 150, date: '2023-07-01' },
+    { sender: 'Charlie', wordCount: 200, date: '2023-07-02' },
+    { sender: 'Alice', wordCount: 100, date: '2023-07-02' },
+    { sender: 'Bob', wordCount: 50, date: '2023-07-03' }
+];
+
+const dataset2 = [
+    { sender: 'Alice', wordCount: 200, date: '2023-07-01' },
+    { sender: 'Bob', wordCount: 100, date: '2023-07-02' },
+    { sender: 'Charlie', wordCount: 150, date: '2023-07-03' },
+    { sender: 'Alice', wordCount: 180, date: '2023-07-04' },
+    { sender: 'Bob', wordCount: 120, date: '2023-07-05' }
+];
+
+const dataset3 = [
+    { sender: 'Alice', wordCount: 300, date: '2023-07-01' },
+    { sender: 'Bob', wordCount: 250, date: '2023-07-02' },
+    { sender: 'Charlie', wordCount: 220, date: '2023-07-03' },
+    { sender: 'Alice', wordCount: 170, date: '2023-07-04' },
+    { sender: 'Bob', wordCount: 190, date: '2023-07-05' }
+];
+
+// Function to summarize the data by date
+function summarizeByDate(data) {
+    const summary = {};
+    data.forEach(entry => {
+        const { date, wordCount } = entry;
+        if (summary[date]) {
+            summary[date] += wordCount;
+        } else {
+            summary[date] = wordCount;
+        }
+    });
+    return Object.keys(summary).map(date => ({
+        date,
+        totalWordCount: summary[date]
+    }));
+}
+
+// Create the initial chart
+const svg = d3.select("svg");
+const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+const width = +svg.attr("width") - margin.left - margin.right;
+const height = +svg.attr("height") - margin.top - margin.bottom;
+const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
+const y = d3.scaleLinear().rangeRound([height, 0]);
+
+const xAxis = g.append("g")
+    .attr("transform", `translate(0,${height})`);
+
+const yAxis = g.append("g");
+
+function updateChart(data) {
+    const summarizedData = summarizeByDate(data);
+    x.domain(summarizedData.map(d => d.date));
+    y.domain([0, d3.max(summarizedData, d => d.totalWordCount)]);
+
+    xAxis.call(d3.axisBottom(x));
+    yAxis.call(d3.axisLeft(y));
+
+    const bars = g.selectAll(".bar")
+        .data(summarizedData);
+
+    bars.enter().append("rect")
+        .attr("class", "bar")
+        .merge(bars)
+        .attr("x", d => x(d.date))
+        .attr("y", d => y(d.totalWordCount))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - y(d.totalWordCount));
+
+    bars.exit().remove();
+}
+
+// Initial render
+updateChart(dataset1);
+
+// Event listeners for buttons
+d3.select("#dataset1").on("click", () => updateChart(dataset1));
+d3.select("#dataset2").on("click", () => updateChart(dataset2));
+d3.select("#dataset3").on("click", () => updateChart(dataset3));
+
+
+
+    </script>
+</body>
+</html>
