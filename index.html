@@ -161,11 +161,6 @@
         var thoughts = await fetchThoughts();
         var messages = await fetchMessages();
 
-        // const summaryThoughtsHourly = await getSummaryThoughtsHourly();
-        // const summaryThoughtsDaily = await getSummaryThoughtsDaily();
-        // const summaryThoughtsToday = await getSummaryThoughtsToday();
-        // const wordCountsPerDay = await getWordCountsPerDay();
-
         async function fetchThoughts() {
             const docRef = doc(db, "raw", "thoughts")
             const snapshot = await getDoc(docRef);
@@ -188,37 +183,6 @@
             console.log("Messages populated");
         }
 
-        // async function getSummaryThoughtsHourly() {
-        //     const colRef = collection(db, 'summaryThoughtsHourly');
-        //     const snapshot = await getDocs(colRef);
-        //     const data = snapshot.docs.map(doc => doc.data());
-        //     return data;
-        // }
-        // async function getSummaryThoughtsDaily() {
-        //     const colRef = collection(db, 'summaryThoughtsDaily');
-        //     const snapshot = await getDocs(colRef);
-        //     const data = snapshot.docs.map(doc => ({
-        //         thoughtOn: new Date(doc.id),
-        //         thoughtCount: doc.data().thoughtCount
-        //     }));
-        //     return data;
-        // }
-        // async function getSummaryThoughtsToday() {
-        //     const colRef = collection(db, 'groupThoughtsDaily');
-        //     const snapshot = await getDocs(colRef);
-        //     const data = snapshot.docs.map(doc => ({
-        //         thoughtOnDate: new Date(doc.id),
-        //         thoughtOnDateTime: doc.data().thoughtOn
-        //     }));
-        //     return data;
-        // }
-        // async function getWordCountsPerDay() {
-        //     const docRef = doc(db, "summaryMessages", "wordCountsPerDay")
-        //     const snapshot = await getDoc(docRef);
-        //     const data = snapshot.data().summary;
-        //     return data;
-        // }
-
         createChart_ThoughtsToday("thoughts-today", thoughts); // (summaryThoughtsToday[summaryThoughtsToday.length-1]).thoughtOnDateTime);
         createChart_ThoughtsTimeline("thoughts-timeline", thoughts); // summaryThoughtsDaily //getThoughtsDataNew //getThoughtsData() //thoughts
         createChart_ThoughtsHourly("thoughts-hourly", thoughts); // summaryThoughtsHourly // getThoughtsDataNew() //getThoughtsData() //thoughts
@@ -240,23 +204,6 @@
 
         // Add visit record
         addVisit();
- 
-        // async function updateLatestThought(){
-        //     latestThought = await getLatestThought();
-        // }
-        // async function getLatestThought(){
-        //     const collectionRef = collection(db, "thoughts");
-        //     const q = query(collectionRef, orderBy("thoughtOn", "desc"), limit(1));
-
-        //     const querySnapshot = await getDocs(q);
-        //     querySnapshot.forEach((doc) => {
-        //         console.log(doc.data());
-        //     });
-
-        //     const thoughtData = querySnapshot.docs[0].data();
-
-        //     return thoughtData;
-        // }
     </script>
 
 </body>

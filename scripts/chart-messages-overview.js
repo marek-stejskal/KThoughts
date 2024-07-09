@@ -182,9 +182,6 @@ function createChart_MessagesOverview(canvasId, chartData){
             document.getElementById(canvasId).append(svg.node());
     }
 
-    // return Object.assign(svg.node(), {scales: {color}});
-    // document.getElementById(canvasId).append(svg.node());
-
     // Initial render
     updateChart(dataSummaryAllArray);
 
