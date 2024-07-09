@@ -97,10 +97,13 @@ function createChart_ThoughtsToday(canvasId, chartData){
         // Get scale modifier
         const scaleModifier = 0.2;
 
-        svg.append("path")
+        // Prevent error if no data for today
+        if (lastPoint) {
+            svg.append("path")
             .attr("d", "M 65,29 C 59,19 49,12 37,12 20,12 7,25 7,42 7,75 25,80 65,118 105,80 123,75 123,42 123,25 110,12 93,12 81,12 71,19 65,29 z")
             .attr("transform", `translate(${x(lastPoint.time) - 65 * scaleModifier}, ${y(lastPoint.count) - 59 * scaleModifier}) scale(${scaleModifier})`)
             .attr("fill", "#ff0707");
+        }        
 
     document.getElementById(canvasId).append(svg.node());
 }
