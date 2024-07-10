@@ -21,7 +21,8 @@ function addVisit(){
 }
 
 function addVisitEmulated(){
-    const url = "https://us-central1-k-thoughts-db.cloudfunctions.net/addVisit";
+    const url = "https://us-central1-k-thoughts-db.cloudfunctions.net/addSiteVisit";
+    var parser = new UAParser();
 
     // Making the POST request
     fetch(url, {
@@ -30,7 +31,8 @@ function addVisitEmulated(){
             'Content-Type': 'application/json'
         },
         body: {
-            visitOn: "",
+            visitOn: formatDateTime(Date.now()),
+            visitInfo: parser.getResult()
         }
     })
     .then(response => response.json()) // Parse the JSON from the response

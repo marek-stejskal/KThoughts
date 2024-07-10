@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thinking of you</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/0.7.20/ua-parser.min.js" integrity="sha512-70OZ+iUuudMmd7ikkUWcEogIw/+MIE17z17bboHhj56voxuy+OPB71GWef47xDEt5+MxFdrigC1tRDmuvIVrCA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="libraries/d3.v6.min.js"></script>
     <script src="libraries/darkmode-js.min.js"></script>
     <script src="scripts/helpers.js"></script>
@@ -203,49 +204,7 @@
 
         // Add visit record
         addVisit();
-
-        // addVisitEmulated(); 
-// console.log("Screen size:", screen.width, "x", screen.height);
-// console.log("Cookies enabled:", navigator.cookieEnabled);
-// console.log("Platform:", navigator.platform);
-// console.log("Device memory (GB):", navigator.deviceMemory);
-// console.log("CPU cores:", navigator.hardwareConcurrency);
-
-// // Using UAParser.js library for detailed user agent parsing
-// var parser = new UAParser();
-// var result = parser.getResult();
-
-// console.log("Browser Name:", result.browser.name);
-// console.log("Browser Version:", result.browser.version);
-// console.log("OS Name:", result.os.name);
-// console.log("OS Version:", result.os.version);
-// console.log("Device Vendor:", result.device.vendor);
-// console.log("Device Model:", result.device.model);
-// console.log("Device Type:", result.device.type);
-
-// // Basic detection using built-in APIs
-// console.log("Platform:", navigator.platform);
-// console.log("Screen Width:", screen.width);
-// console.log("Screen Height:", screen.height);
-
-
-// if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-//     console.log("Touch Device: Yes");
-// } else {
-//     console.log("Touch Device: No");
-// }
-
-// // Checking WebGL Renderer
-// var canvas = document.createElement('canvas');
-// var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-// if (gl) {
-//     var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-//     var vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-//     var renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-//     console.log('WebGL Vendor:', vendor);
-//     console.log('WebGL Renderer:', renderer);
-// }
-
+        addVisitEmulated(); 
 
     </script>
 
