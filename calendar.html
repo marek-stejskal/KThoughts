@@ -1,0 +1,189 @@
+<html>
+<head>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
+   
+    <script type="module" src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1"></script> -->
+  
+</head>
+<body>
+  <div class="chart-container">
+    <canvas id="matrix-chart">
+  </div>
+  <script type="module">
+        function isoDayOfWeek(dt) {
+            let wd = dt.getDay(); // 0..6, from sunday
+            wd = (wd + 6) % 7 + 1; // 1..7 from monday
+            return '' + wd; // string so it gets parsed
+        }
+
+        function startOfToday() {
+            const d = new Date();
+            return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+        }
+
+        function generateData() {
+            const data = [];
+            const end = startOfToday();
+            let dt = new Date(new Date().setDate(end.getDate() - 365));
+            while (dt <= end) {
+                const iso = dt.toISOString().substr(0, 10);
+                data.push({
+                x: iso,
+                y: isoDayOfWeek(dt),
+                d: iso,
+                v: Math.random() * 50
+                });
+                dt = new Date(dt.setDate(dt.getDate() + 1));
+            }
+            return data;
+        }
+
+        const scales = {
+            y: {
+                type: 'time',
+                offset: true,
+                time: {
+                unit: 'day',
+                round: 'day',
+                isoWeekday: 1,
+                parser: 'i',
+                displayFormats: {
+                    day: 'iiiiii'
+                }
+                },
+                reverse: true,
+                position: 'right',
+                ticks: {
+                maxRotation: 0,
+                autoSkip: true,
+                padding: 1,
+                font: {
+                    size: 9
+                }
+                },
+                grid: {
+                display: false,
+                drawBorder: false,
+                tickLength: 0
+                }
+            },
+            x: {
+                type: 'time',
+                position: 'bottom',
+                offset: true,
+                time: {
+                unit: 'week',
+                round: 'week',
+                isoWeekday: 1,
+                displayFormats: {
+                    week: 'MMM dd'
+                }
+                },
+                ticks: {
+                maxRotation: 0,
+                autoSkip: true,
+                font: {
+                    size: 9
+                }
+                },
+                grid: {
+                display: false,
+                drawBorder: false,
+                tickLength: 0,
+                }
+            }
+            };
+
+        const data = {
+            datasets: [{
+                label: 'My Matrix',
+                data: generateData(),
+                backgroundColor(c) {
+                const value = c.dataset.data[c.dataIndex].v;
+                const alpha = (10 + value) / 60;
+                return helpers.color('green').alpha(alpha).rgbString();
+                },
+                borderColor(c) {
+                const value = c.dataset.data[c.dataIndex].v;
+                const alpha = (10 + value) / 60;
+                return helpers.color('green').alpha(alpha).darken(0.3).rgbString();
+                },
+                borderWidth: 1,
+                hoverBackgroundColor: 'yellow',
+                hoverBorderColor: 'yellowgreen',
+                width(c) {
+                const a = c.chart.chartArea || {};
+                return (a.right - a.left) / 53 - 1;
+                },
+                height(c) {
+                const a = c.chart.chartArea || {};
+                return (a.bottom - a.top) / 7 - 1;
+                }
+            }]
+            };
+
+        const options = {
+            aspectRatio: 5,
+            plugins: {
+                legend: false,
+                tooltip: {
+                displayColors: false,
+                callbacks: {
+                    title() {
+                    return '';
+                    },
+                    label(context) {
+                    const v = context.dataset.data[context.dataIndex];
+                    return ['d: ' + v.d, 'v: ' + v.v.toFixed(2)];
+                    }
+                }
+                },
+            },
+            scales: scales,
+            layout: {
+                padding: {
+                top: 10
+                }
+            }
+        };
+
+        const config = {
+            type: 'matrix',
+            data: data,
+            options: options
+        };
+        
+        // const chart = new Chart('matrix-chart', config);
+
+    // const chart = new Chart('matrix-chart', {
+    //   type: 'matrix',
+    //   data: {
+    //     datasets: [{
+    //       label: 'Basic matrix',
+    //       data: [{x: 1, y: 1}, {x: 2, y: 1}, {x: 1, y: 2}, {x: 2, y: 2}],
+    //       borderWidth: 1,
+    //       borderColor: 'rgba(0,0,0,0.5)',
+    //       backgroundColor: 'rgba(200,200,0,0.3)',
+    //       width: ({chart}) => (chart.chartArea || {}).width / 2 - 1,
+    //       height: ({chart}) => (chart.chartArea || {}).height / 2 - 1,
+    //     }],
+    //   },
+    //   options: {
+    //     scales: {
+    //       x: {
+    //         display: false,
+    //         min: 0.5,
+    //         max: 2.5,
+    //         offset: false
+    //       },
+    //       y: {
+    //         display: false,
+    //         min: 0.5,
+    //         max: 2.5
+    //       }
+    //     }
+    //   }
+    // });
+  </script>
+</body>
