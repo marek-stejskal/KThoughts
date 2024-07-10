@@ -6,6 +6,9 @@ function addVisit(){
         method: 'POST', // Specify the method
         headers: {
             'Content-Type': 'application/json'
+        },
+        body: {
+            visitOn: "",
         }
     })
     .then(response => response.json()) // Parse the JSON from the response
