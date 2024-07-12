@@ -187,7 +187,7 @@ function createChart_MessagesOverview(canvasId, chartData){
 
     // Event listeners for buttons
     d3.select("#msgDataBoth").on("click", () => updateChart(dataSummaryAllArray));
-    d3.select("#msgDataMarek").on("click", () => updateChart(dataSummaryMarekArray));
-    d3.select("#msgDataKatka").on("click", () => updateChart(dataSummaryKatkaArray));
+    d3.select("#msgDataMe").on("click", () => updateChart(dataSummaryMarekArray));
+    d3.select("#msgDataYou").on("click", () => updateChart(dataSummaryKatkaArray));
 
 }
