@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thinking of you</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/0.7.20/ua-parser.min.js" integrity="sha512-70OZ+iUuudMmd7ikkUWcEogIw/+MIE17z17bboHhj56voxuy+OPB71GWef47xDEt5+MxFdrigC1tRDmuvIVrCA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="libraries/d3.v6.min.js"></script>
     <script src="libraries/darkmode-js.min.js"></script>
     <script src="scripts/helpers.js"></script>
@@ -141,10 +142,10 @@
       
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        // const db = getFirestore(app);
+        const db = getFirestore(app);
 
-        const db = getFirestore();
-        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+        // const db = getFirestore();
+        // connectFirestoreEmulator(db, '127.0.0.1', 8080);
 
         const thoughtsDoc = doc(db, "raw", "thoughts");
         onSnapshot(thoughtsDoc, (doc) => {
@@ -199,6 +200,8 @@
 
         // Add visit record
         addVisit();
+        addVisitEmulated(); 
+
     </script>
 
 </body>

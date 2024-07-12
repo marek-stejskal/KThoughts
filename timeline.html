@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline Chart with Chart.js and date-fns</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
+</head>
+<body>
+    <h2>Timeline Chart</h2>
+    <canvas id="timelineChart"></canvas>
+    <script>
+        const ctx = document.getElementById('timelineChart').getContext('2d');
+
+        const data = {
+            labels: [
+                dateFns.format(new Date(2024, 0, 1), 'yyyy-MM-dd'),
+                dateFns.format(new Date(2024, 1, 1), 'yyyy-MM-dd'),
+                dateFns.format(new Date(2024, 2, 1), 'yyyy-MM-dd'),
+                dateFns.format(new Date(2024, 3, 1), 'yyyy-MM-dd'),
+                dateFns.format(new Date(2024, 4, 1), 'yyyy-MM-dd'),
+                dateFns.format(new Date(2024, 5, 1), 'yyyy-MM-dd')
+            ],
+            datasets: [{
+                label: 'Event Timeline',
+                data: [10, 20, 30, 40, 50, 60],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                fill: false,
+                tension: 0.1
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'month',
+                            displayFormats: {
+                                month: 'MMM yyyy'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Value'
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    </script>
+</body>
+</html>

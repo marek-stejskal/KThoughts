@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Data Fetch</title>
+    <script src="https://cdn.jsdelivr.net/npm/firebase@9.20.0/firebase-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/firebase@9.20.0/firebase-database.js"></script>
+</head>
+<body>
+    <h2>Firebase Data Fetch Example</h2>
+    <div id="dataDisplay">Loading data...</div>
+
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Reference to your Firebase Database
+        const dbRef = firebase.database().ref();
+
+        // Function to get data from Firebase
+        dbRef.child("yourDataNode").get().then((snapshot) => {
+            if (snapshot.exists()) {
+                document.getElementById('dataDisplay').innerText = JSON.stringify(snapshot.val(), null, 2);
+            } else {
+                document.getElementById('dataDisplay').innerText = "No data available";
+            }
+        }).catch((error) => {
+            console.error("Error getting data: ", error);
+            document.getElementById('dataDisplay').innerText = "Error getting data";
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1"></script>
+        <script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth-compat.js"></script>
+    </head>
+    <body>
+        <script type="module">
+            const firebaseConfig = {
+                apiKey: "AIzaSyCdsLdaLzaSDZnyR-evvlbfYmGt0mHpgmA",
+                authDomain: "k-thoughts-db.firebaseapp.com",
+                projectId: "k-thoughts-db",
+                databaseURL: "YOUR_DATABASE_URL",
+                storageBucket: "k-thoughts-db.appspot.com",
+                messagingSenderId: "753934912285",
+                appId: "1:753934912285:web:63e6e3ded1ad23f92baff4"
+            };
+
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+
+            // Reference to your database
+            var database = firebase.database();
+        </script>
+    </body>
+</html>

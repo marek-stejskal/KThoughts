@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chart.js with Firebase</title>
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <canvas id="myChart" width="400" height="200"></canvas>
+  <script>
+    // Your web app's Firebase configuration
+    // var firebaseConfig = {
+    //   apiKey: "YOUR_API_KEY",
+    //   authDomain: "YOUR_AUTH_DOMAIN",
+    //   databaseURL: "YOUR_DATABASE_URL",
+    //   projectId: "YOUR_PROJECT_ID",
+    //   storageBucket: "YOUR_STORAGE_BUCKET",
+    //   messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    //   appId: "YOUR_APP_ID"
+    // };
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCdsLdaLzaSDZnyR-evvlbfYmGt0mHpgmA",
+        authDomain: "k-thoughts-db.firebaseapp.com",
+        projectId: "k-thoughts-db",
+        databaseURL: "YOUR_DATABASE_URL",
+        storageBucket: "k-thoughts-db.appspot.com",
+        messagingSenderId: "753934912285",
+        appId: "1:753934912285:web:63e6e3ded1ad23f92baff4"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Reference to your database
+    var database = firebase.database();
+    
+
+    // Fetch data from Firebase
+    function fetchData() {
+      return database.ref('/path/to/your/data').once('value').then(snapshot => {
+        const data = [];
+        snapshot.forEach(childSnapshot => {
+          const childData = childSnapshot.val();
+          data.push({
+            id: childSnapshot.key,
+            thoughtOn: new Date(childData.thoughtOn)
+          });
+        });
+        return data;
+      });
+    }
+
+    // Group data by date
+    function groupDataByDate(data) {
+      const groupedData = {};
+      data.forEach(item => {
+        const dateStr = item.thoughtOn.toISOString().split('T')[0];
+        if (!groupedData[dateStr]) {
+          groupedData[dateStr] = 0;
+        }
+        groupedData[dateStr]++;
+      });
+      return groupedData;
+    }
+
+    // Generate date labels for a given range
+    function generateDateLabels(startDate, endDate) {
+      const dates = [];
+      let currentDate = new Date(startDate);
+      while (currentDate <= endDate) {
+        dates.push(currentDate.toISOString().split('T')[0]);
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      return dates;
+    }
+
+    // Main function to create chart
+    async function createChart() {
+      const rawData = await fetchData();
+      const groupedData = groupDataByDate(rawData);
+
+      const startDate = new Date(Math.min(...rawData.map(item => item.thoughtOn)));
+      const endDate = new Date(Math.max(...rawData.map(item => item.thoughtOn)));
+
+      const dateLabels = generateDateLabels(startDate, endDate);
+
+      const chartData = dateLabels.map(date => groupedData[date] || 0);
+
+      const ctx = document.getElementById('myChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: dateLabels,
+          datasets: [{
+            label: 'Thoughts per Day',
+            data: chartData,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            fill: true,
+          }]
+        },
+        options: {
+          scales: {
+            x: {
+              type: 'time',
+              time: {
+                unit: 'day',
+                tooltipFormat: 'YYYY-MM-DD',
+                displayFormats: {
+                  day: 'YYYY-MM-DD'
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    createChart();
+  </script>
+</body>
+</html>

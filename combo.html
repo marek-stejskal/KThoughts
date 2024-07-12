@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Firestore Data with Chart.js</title>
+    </head>
+    <body>
+        <h1>Firestore Data with Chart.js</h1>
+        <canvas id="chartCombo" width="400" height="200"></canvas>
+
+        <script type="module">
+            import { initializeApp }                        from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'
+            import { getAuth }                              from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'
+            import { getFirestore, collection, getDocs  }   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'
+
+            // Your web app's Firebase configuration
+            const firebaseConfig = {
+              apiKey: "AIzaSyCdsLdaLzaSDZnyR-evvlbfYmGt0mHpgmA",
+              authDomain: "k-thoughts-db.firebaseapp.com",
+              projectId: "k-thoughts-db",
+              storageBucket: "k-thoughts-db.appspot.com",
+              messagingSenderId: "753934912285",
+              appId: "1:753934912285:web:63e6e3ded1ad23f92baff4"
+            };
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const thoughtList = await getThoughts(db);
+            const messageList = await getMessages(db);
+
+            async function getThoughts(db) {
+                const thoughtsCol = collection(db, 'thoughts');
+                const thoughtSnapshot = await getDocs(thoughtsCol);
+                const thoughtList = thoughtSnapshot.docs.map(doc => doc.data());
+                return thoughtList;
+            }
+
+            async function getMessages(db) {
+                const messageCol = collection(db, 'messages');
+                const messageSnapshot = await getDocs(messageCol);
+                const messageList = messageSnapshot.docs.map(doc => doc.data());
+                return messageList;
+            }
+        </script>
+    </body>
+</html>
