@@ -5,7 +5,7 @@ function createChart_ThoughtsTimeline(canvasId, chartData){
 
     const [minDate, maxDate] = d3.extent(dates);
 
-    const fullDateRange = d3.timeDays(minDate, d3.timeDay.offset(maxDate, 1));
+    const fullDateRange = d3.timeDays( d3.timeDay.offset(maxDate, -30), d3.timeDay.offset(maxDate, 1));
     const finalData = fullDateRange.map(d => ({
         thoughtOn: d,
         thoughtCount: datesGroupped.get(d) || 0
