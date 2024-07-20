@@ -7,9 +7,9 @@ function addVisit(){
         headers: {
             'Content-Type': 'application/json'
         },
-        body: {
-            visitOn: "",
-        }
+        body: JSON.stringify({
+            visitOn: formatDateTime(Date.now()),
+        })
     })
     .then(response => response.json()) // Parse the JSON from the response
     .then(data => {
@@ -30,10 +30,10 @@ function addVisitEmulated(){
         headers: {
             'Content-Type': 'application/json'
         },
-        body: {
+        body: JSON.stringify({
             visitOn: formatDateTime(Date.now()),
             visitInfo: parser.getResult()
-        }
+        })
     })
     .then(response => response.json()) // Parse the JSON from the response
     .then(data => {

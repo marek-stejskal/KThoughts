@@ -39,7 +39,7 @@ function createChart_ThoughtsToday(canvasId, chartData){
 
     // Calculate the maximum value for the y-axis
     var maxDatasetValue = d3.max(cumulativeData, d => d.count)
-    var yMax = maxDatasetValue < 20 ? 20 : maxDatasetValue;
+    var yMax = maxDatasetValue < 15 ? 15 : maxDatasetValue;
 
     // Define scales
     const x = d3.scaleTime()
